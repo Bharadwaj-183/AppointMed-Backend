@@ -6,7 +6,13 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 // const autoIncrement = require("mongoose-auto-increment");
 
 const app = express();
-app.use(cors());
+app.UseCors((x) =>
+  x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed((origin) => true) // allow any origin
+    .AllowCredentials()
+);
 app.use(bodyParser.json());
 const Schema = mongoose.Schema;
 
