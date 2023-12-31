@@ -3,6 +3,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
+require("dotenv").config();
+
 // const autoIncrement = require("mongoose-auto-increment");
 
 const app = express();
@@ -83,13 +85,10 @@ const counterSchema = new mongoose.Schema({
 });
 
 const CounterModel = mongoose.model("Counter", counterSchema);
-
+const dbUri = process.env.MONGODB_URI;
 // Connect to MongoDB
 mongoose
-  .connect(
-    "mongodb+srv://admin-bharadwaj:Bharadwaj_183@cluster0.h2kohig.mongodb.net/appointmentsDB",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("connected");
   });
