@@ -287,7 +287,7 @@ app.get("/getAppointments", async (req, res) => {
     }));
 
     // Return the transformed appointments in the response
-    console.log("retrived data in backend ", transformedAppointments);
+    // console.log("retrived data in backend ", transformedAppointments);
     res.status(200).json({
       message: "Appointments retrieved successfully",
       data: transformedAppointments,
