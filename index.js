@@ -8,7 +8,11 @@ require("dotenv").config();
 // const autoIncrement = require("mongoose-auto-increment");
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+  })
+);
 app.use(bodyParser.json());
 const Schema = mongoose.Schema;
 
