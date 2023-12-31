@@ -10,7 +10,7 @@ require("dotenv").config();
 const app = express();
 app.use(
   cors({
-    origin: "https://appointmed.netlify.app/",
+    origin: "https://appointmed.netlify.app",
   })
 );
 app.use(bodyParser.json());
