@@ -3,33 +3,12 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
+// const autoIncrement = require("mongoose-auto-increment");
 
 const app = express();
-
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
-
 app.use(cors());
-
 app.use(bodyParser.json());
 const Schema = mongoose.Schema;
-
-// user schema for login
-const userSchema = new Schema({
-  email: { type: String, unique: true },
-  password: String,
-});
-
-// Create a model for the user
-const UserModel = mongoose.model("User", userSchema);
-
-// const mongoose = require("mongoose");
 
 // Define the schema
 const appointmentSchema = new Schema({
@@ -115,138 +94,6 @@ mongoose
     console.log("connected");
   });
 
-// async function readCounterValues() {
-//   try {
-//     const currAMA = await CounterModel.findOne({ AMA }) ;
-//     const currAMB = await CounterModel.findOne({ AMB });
-//     const currAMC = await CounterModel.findOne({ AMC });
-//     const currAMO = await CounterModel.findOne({ AMO });
-//     const currAMS = await CounterModel.findOne({ AMS });
-//     const currAMT = await CounterModel.findOne({ AMT });
-
-//     // return result;
-//   } catch (error) {
-//     console.error('Error reading counter values:', error);
-//     return null;
-//   }
-// }
-// appointmentSchema.plugin(AutoIncrement, {
-//   inc_field: "bookingId",
-//   start_seq: 1,
-// });
-// appointmentSchema.plugin(AutoIncrement, {
-//   inc_field: "orderId",
-//   //   start_seq: "AMO2000",
-// });
-// appointmentSchema.plugin(AutoIncrement, {
-//   inc_field: "serviceNumber",
-//   //   start_seq: "AMS3000",
-// });
-// appointmentSchema.plugin(AutoIncrement, {
-//   inc_field: "transactionId",
-//   //   start_seq: "AMT4000",
-// });
-// appointmentSchema.plugin(AutoIncrement, {
-//   inc_field: "correlationId",
-//   //   start_seq: "AMC5000",
-// });
-
-// Create a new appointment instance
-// Pre-save middleware to auto-generate IDs
-// appointmentSchema.pre("save", async function (next) {
-//   const doc = this;
-
-//   // Generate IDs only if they are not provided (i.e., for new documents)
-//   if (!doc.bookingId)
-//     doc.bookingId = await generateNextId("AMB1000", "bookingId");
-//   if (!doc.orderId) doc.orderId = await generateNextId("AMO2000", "orderId");
-//   if (!doc.serviceNumber)
-//     doc.serviceNumber = await generateNextId("AMS3000", "serviceNumber");
-//   if (!doc.transactionId)
-//     doc.transactionId = await generateNextId("AMT4000", "transactionId");
-//   if (!doc.correlationId)
-//     doc.correlationId = await generateNextId("AMC5000", "correlationId");
-
-//   // Continue with the save operation
-//   next();
-// });
-
-// Helper function to generate the next ID based on the current maximum
-// async function generateNextId(baseId, field) {
-//   const Model = mongoose.model("Appointment");
-//   const query = Model.find({})
-//     .sort({ [field]: -1 })
-//     .limit(1);
-
-//   const docs = await query.exec();
-//   const maxId = docs.length ? docs[0][field] : baseId;
-
-//   // Extract the numeric part of the ID, increment it, and combine with the base
-//   const numericPart = parseInt(maxId.substring(3), 10);
-//   const nextNumericPart = numericPart + 1;
-//   return baseId.substring(0, 3) + nextNumericPart;
-// }
-
-// const newAppointment = new AppointmentModel({
-//   Username_doctor: "Dr. Walter",
-//   accId: "doctor123",
-//   doctorEmail: "john.doe@example.com",
-//   doctorTimezone: "PST",
-//   bookedServicesData: [
-//     {
-//       customerEmail: "patient@example.com",
-//       customerPhoneNumber: "+1234567890",
-//       customerName: "Patient One",
-//       amount: 5000,
-//       currency: "USD",
-//       serviceTitle: "Eye Treatment",
-//       serviceCategory: "Video meeting",
-//       isServicePackage: false,
-//       packageValidity: "2024-12-31",
-//       isRescheduled: false,
-//       isCancelled: false,
-//       numberOfReschedules: 0,
-//       rescheduledBy: "consumer",
-//       questionObj: [
-//         {
-//           question: "What is the problem?",
-//           answer: "Eye swelling",
-//         },
-//       ],
-//       contextQuestion: [
-//         {
-//           question: "From when is the problem?",
-//           answer: "From 3 days",
-//         },
-//       ],
-//       transactionStatus: "success",
-//       bookingStatus: "confirmed",
-//       meetingStartTime: "2023-01-01T10:00:00",
-//       meetingEndTime: "2023-01-01T11:00:00",
-//       date: {
-//         day: 22,
-//         month: "Dec",
-//         weekDay: "Fri",
-//       },
-//       customerTimezone: "AST",
-//       location: {
-//         country: "AU",
-//         city: "Sydney",
-//         state: "NSW",
-//       },
-//       isPaymentSuccessful: true,
-//     },
-//   ],
-// });
-
-// newAppointment
-//   .save()
-//   .then((savedUser) => {
-//     console.log("User saved:", savedUser);
-//   })
-//   .catch((err) => {
-//     console.error("Error saving user:", err);
-//   });
 dicName = {
   cardiology: "Dr.Mukesh Tripathi",
   ophthalmology: "Dr.Sripriya Reddy",
@@ -270,47 +117,6 @@ dicEmail = {
 
 let dic;
 app.post("/submitForm", async (req, res) => {
-  //   try {
-  //     // Extract user-provided details from the request body
-  //     console.log(req.body);
-  //     const {
-  //       customerEmail,
-  //       customerPhoneNumber,
-
-  //       // ... other fields ...
-  //     } = req.body;
-
-  //     // Create a new appointment instance with user-provided values
-  //     const newAppointment = new AppointmentModel({
-  //       customerEmail,
-  //       customerPhoneNumber,
-
-  //       // ... other fields ...
-  //     });
-  //     console.log(newAppointment);
-  //     // Save the appointment to the database
-  //     const savedAppointment = await newAppointment.save();
-
-  //     res.status(200).json({
-  //       message: "Appointment saved successfully",
-  //       data: savedAppointment,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ message: "Error saving appointment" });
-  //   }
-
-  // const newAppointment = new AppointmentModel({
-  //   bookedServicesData: [
-  //     {
-  //       customerEmail: req.body.customerEmail,
-  //       customerPhoneNumber: req.body.customerPhoneNumber,
-  //     },
-  //   ],
-  // });
-
-  // READING COUNTER VALUES
-
   // READING COUNTERS
   console.log("GOT DATA FROM FRONTEND", req.body);
   CounterModel.findOne({})
@@ -337,43 +143,6 @@ app.post("/submitForm", async (req, res) => {
     .catch((err) => {
       console.log("error while reading counters", err);
     });
-
-  // try {
-  //   await CounterModel.findOneAndUpdate(
-  //     { AMA },
-  //     { $set: { count: currAMA + 1 } },
-  //     { new: true }
-  //   );
-  //   await CounterModel.findOneAndUpdate(
-  //     { AMB },
-  //     { $set: { count: currAMB + 1 } },
-  //     { new: true }
-  //   );
-  //   await CounterModel.findOneAndUpdate(
-  //     { AMC },
-  //     { $set: { count: currAMC + 1 } },
-  //     { new: true }
-  //   );
-  //   await CounterModel.findOneAndUpdate(
-  //     { AMO },
-  //     { $set: { count: currAMO + 1 } },
-  //     { new: true }
-  //   );
-  //   await CounterModel.findOneAndUpdate(
-  //     { AMS },
-  //     { $set: { count: currAMS + 1 } },
-  //     { new: true }
-  //   );
-  //   await CounterModel.findOneAndUpdate(
-  //     { AMT },
-  //     { $set: { count: currAMT + 1 } },
-  //     { new: true }
-  //   );
-
-  //   console.log("Counter values updated successfully:", updatedCounter);
-  // } catch (error) {
-  //   console.error("Error updating counter values:", error);
-  // }
 
   // UPDATING COUNTER VALUES
 
