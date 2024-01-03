@@ -5,17 +5,25 @@ const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 require("dotenv").config();
 
-// const autoIncrement = require("mongoose-auto-increment");
+const { validate, insert, tokenValidity } = require("./validate");
 
 const app = express();
+app.use(express.json());
 app.use(
   cors({
     origin: "https://appointmed.netlify.app",
+    origin: "http://localhost:3000",
   })
 );
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 const Schema = mongoose.Schema;
 
+const userSchema = new Schema({
+  userEmail: String,
+  userPassword: String,
+});
+
+const UserModel = mongoose.model("User", userSchema);
 // Define the schema
 const appointmentSchema = new Schema({
   Username_doctor: String,
@@ -302,71 +310,99 @@ app.get("/getAppointments", async (req, res) => {
   }
 });
 
+// app.post("/signup", async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     // Hash the password before saving it to the database
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     // Create a new user instance
+//     const newUser = new UserModel({
+//       email,
+//       password: hashedPassword,
+//     });
+
+//     // Save the user to the database
+//     await newUser.save();
+
+//     res.status(201).json({
+//       message: "User registered successfully",
+//     });
+//   } catch (error) {
+//     console.error("Error registering user:", error);
+//     res.status(500).json({
+//       message: "Error registering user",
+//     });
+//   }
+// });
+
+// Login endpoint
+// app.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     // Find the user in the database by email
+//     const user = await UserModel.findOne({ email });
+
+//     if (user) {
+//       // Compare the provided password with the hashed password in the database
+//       const isPasswordValid = await bcrypt.compare(password, user.password);
+
+//       if (isPasswordValid) {
+//         // Password is valid, authentication successful
+//         res.status(200).json({
+//           message: "Login successful",
+//         });
+//       } else {
+//         // Password is invalid
+//         res.status(401).json({
+//           message: "Invalid credentials",
+//         });
+//       }
+//     } else {
+//       // User not found
+//       res.status(404).json({
+//         message: "User not found",
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Error during login:", error);
+//     res.status(500).json({
+//       message: "Error during login",
+//     });
+//   }
+// });
+
+app.post("/login", async (req, res) => {
+  // console.log(req);
+  // console.log(req.body);
+  const { email, password } = req.body;
+
+  // console.log(email, password);
+
+  const result = await validate(email, password, UserModel);
+  console.log("result in index.js", result);
+  res.send(result);
+});
+
 app.post("/signup", async (req, res) => {
   const { email, password } = req.body;
 
-  try {
-    // Hash the password before saving it to the database
-    const hashedPassword = await bcrypt.hash(password, 10);
+  // console.log(email, password);
 
-    // Create a new user instance
-    const newUser = new UserModel({
-      email,
-      password: hashedPassword,
-    });
-
-    // Save the user to the database
-    await newUser.save();
-
-    res.status(201).json({
-      message: "User registered successfully",
-    });
-  } catch (error) {
-    console.error("Error registering user:", error);
-    res.status(500).json({
-      message: "Error registering user",
-    });
-  }
+  const result = await insert(email, password, UserModel);
+  console.log("result in index.js", result);
+  res.send(result);
 });
 
-// Login endpoint
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    // Find the user in the database by email
-    const user = await UserModel.findOne({ email });
-
-    if (user) {
-      // Compare the provided password with the hashed password in the database
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-
-      if (isPasswordValid) {
-        // Password is valid, authentication successful
-        res.status(200).json({
-          message: "Login successful",
-        });
-      } else {
-        // Password is invalid
-        res.status(401).json({
-          message: "Invalid credentials",
-        });
-      }
-    } else {
-      // User not found
-      res.status(404).json({
-        message: "User not found",
-      });
-    }
-  } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({
-      message: "Error during login",
-    });
-  }
+app.post("/validatetoken", async (req, res) => {
+  console.log(req.body.token);
+  const val = tokenValidity(req.body.token);
+  console.log("val in index,js", val);
+  res.send({ valid: val });
 });
-
 // Start the server
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log(`Server is running on port 3000`);
 });
